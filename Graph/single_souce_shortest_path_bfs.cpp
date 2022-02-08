@@ -1,61 +1,81 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+class Graph{
+    int V;
+    list<int> *l;
 
-void addEdge(int x, int y, vector<int> adj[]){
-    adj[x].push_back(y);
-}
-
-void sol(int src, vector<int> adj[], int v){
-    queue<int> q;
-
-    q.push(src);
-
-    int dist[v+1];
-
-    for(int i=0; i < v+1; i++){
-        dist[i] = -1;
+    public:
+    Graph(int v){
+        V = v;
+        l = new list<int> [V];
     }
 
-    dist[src] = 0;
+    void addEdge(int u, int v){
+        l[u].push_back(v);
+        l[v].push_back(u);
+    }
 
 
-    while(!q.empty()){
-        int top = q.front();
-        q.pop();
+    void bfs(int src, int dest){
+        queue<int> q;
 
-        for(auto itr: adj[top]){
-            if(dist[itr] == -1){
-                q.push(itr);
-                dist[itr] = dist[top] + 1;
+        q.push(src);
+
+        int dist[V+1] = {-1};
+        int parent[V] = {-1};
+        bool visited[V] = {false};
+
+        dist[src] = 0;
+        parent[src] = src;
+        visited[src] = true;
+
+        while(!q.empty()){
+            int top = q.front();
+            q.pop();
+
+            for(auto itr: l[top]){
+                if(!visited[itr]){
+                    q.push(itr);
+                    visited[itr] = true;
+                    dist[itr] = dist[top] + 1;
+                    parent[itr] = top;
+                }
             }
         }
-    }
 
-    for(int i=0; i < v; i++){
-        cout<<dist[i]<<"    ";
-    }
+        //to print shortest distance to a particular node
+        for(int i=0; i<V; i++){
+            cout<<"Shortest distance to node "<<i<<" : "<<dist[i]<<endl;
+        }
 
-}
+        //to print the path
+        if(dest != -1){
+            int temp = dest;
+            while(temp != src){
+                cout<<temp<<" -- ";
+                temp = parent[temp];
+            }
+            cout<<src<<endl;
+        }
+    }
+};
+
+
 
 int main(){
 
-    int v, e;
+    Graph g(7);
+    g.addEdge(0, 1);
+    g.addEdge(1, 2);
+    g.addEdge(2, 3);
+    g.addEdge(3, 5);
+    g.addEdge(5, 6);
+    g.addEdge(4, 5);
+    g.addEdge(0, 4);
+    g.addEdge(3, 4);
 
-    cin>>v>>e;
-
-    vector<int> adj[v];
-    
-
-    for(int i=0; i<e; i++){
-        int u, v;
-        cin>>u>>v;
-        addEdge(u, v, adj);
-    }    
-
-    sol(0, adj, v);
-    
-    cout<<endl;
+    g.bfs(1, 6);
 
     return 0;
     
