@@ -1,62 +1,71 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+class Graph{
+	int V;
+	list<int> *l;
+	
+	public:
+	Graph(int v){
+		V = v;
+		l = new list<int> [V];
+	}
+	
+	void addEdge(int u, int v){
+		l[u].push_back(v);
+		l[v].push_back(u);
+	}
 
-bool dfs_helper(vector<int> adj[], int *visited, int src, int parent, int color){
-    
-    visited[src] = color;
-    cout<<color<<endl;
-    for(auto nbr: adj[src]){
-        if(visited[nbr] == 0){
-            bool check_cycle = dfs_helper(adj, visited, nbr, src, 3-color);
+    bool dfs_helper(int visited[], int src, int parent, int color){
+        
+        visited[src] = color;
+        for(auto nbr: l[src]){
+            if(visited[nbr] == 0){
+                bool sub_prob = dfs_helper(visited, nbr, src, 3-color); //as color either 1 or 2, so if color is 1 the pass 3-1 = 2
 
-            if(check_cycle == false)
+                if(sub_prob == false)
+                    return false;
+            }
+
+            else if(nbr != parent && visited[nbr] == color){
                 return false;
+            }
         }
 
-        else if(nbr != parent && visited[nbr] == color){
-            return false;
-        }
+        return true;
     }
 
-    return true;
-}
+    bool dfs(int src){
+        int visited[V] = {0};
 
-bool dfs(vector<int> adj[], int v){
-    int visited[v] = {0};
+        for(int i=0; i<V; i++){
+            if(visited[i] == 0){
+                bool check = dfs_helper(visited, i, -1, 1);
+                if(check == false){
+                    return check;
+                }
+            }
+        } 
 
-    bool ans = dfs_helper(adj, visited, 0, -1, 1);
-
-    for(int i=0; i<v; i++){
-        cout<<i<<" color is "<<visited[i]<<endl;
+        return true;
     }
+};
 
-    return ans;
-}
 
   
 int main()
 {
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
-    #endif
-    
-    int V, E;
-    cin>>V>>E;
+     
+	Graph g(6);
+	g.addEdge(1, 2);
+	g.addEdge(1, 3);
+	g.addEdge(2, 4);
+	g.addEdge(2, 5);
+	g.addEdge(4, 5);
+	g.addEdge(5, 3);
 
-    vector<int> adj[V];
-
-    while(E--){
-        int u, v;
-        cin>>u>>v;
-
-        adj[u].push_back(v);
-        adj[v].push_back(u);
-    }
-
-    if(dfs(adj, V)){
-        cout<<"Graph is Bipartite";
+    if(g.dfs(1)){
+        cout<<"Graph is Bipartite"<<endl;
     }
 
     else{   

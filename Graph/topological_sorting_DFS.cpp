@@ -1,76 +1,61 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
+class Graph{
+	int V;
+	list<int> *l;
+	
+	public:
+	Graph(int v){
+		V = v;
+		l = new list<int> [V];
+	}
+	
+	void addEdge(int u, int v){
+		l[u].push_back(v);
+		//l[v].push_back(u);
+	}
+	
+	void dfs_helper(int src, bool visited[], list<int> &ordering){
+		visited[src] = true;
 
-class DFS{
-    vector<int> *adj;
-    int V;
-
-public:
-
-    DFS(int v){
-        
-        V = v;
-
-        adj = new vector<int> [V];
-
-    }
-
-    void addEdge(int x, int y){
-        adj[x].push_back(y);
-    }
-
-    void dfs_utils(int src, bool visited[], list<int> &ordering){
-        visited[src] = true;
-
-        for(auto itr: adj[src]){
-            if(!visited[itr]){
-                dfs_utils(itr, visited, ordering);
-            }
-        }
-
-        ordering.push_front(src);
-    }
-
-    void dfs(){
-
-        list<int> ordering;
-        bool visited[V] = {false};
-    
-        for(int i=0; i<V; i++){
-            
-            if(!visited[i])
-                dfs_utils(i, visited, ordering);
-        
-        }
-        
-        for(auto itr: ordering){
-            cout<<itr<<endl;
-        }
-    }
-
+		for(int nbr: l[src]){
+			if(!visited[nbr]){
+				dfs_helper(nbr, visited, ordering);	
+			}
+		}
+		
+		//at this point
+		ordering.push_front(src);
+		return;
+	}
+	
+	void dfs(int src){
+		
+		bool visited[V] = {false};
+		list<int> ordering;
+		
+		for(int i=src; i<V; i++){
+		
+			if(!visited[i]){
+				dfs_helper(i, visited, ordering);
+			}		
+		
+		}
+		
+		//finally print the list
+		for(int node: ordering){
+			cout<<node<<" ";
+		} 		
+	}
 };
-
-
-int main()
-{
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
-    #endif
-    
-    int v, e;
-    cin>>v>>e;
-
-    DFS g(v);
-
-    for(int i=0; i<e; i++){
-        int x, y;
-        cin>>x>>y;
-
-        g.addEdge(x, y);
-    }
-
-    g.dfs();
-
-    return 0;
+int main() {
+	Graph g(5);
+	g.addEdge(1, 2);
+	g.addEdge(1, 3);
+	g.addEdge(2, 4);
+	g.addEdge(3, 4);
+	
+	g.dfs(1);
+	
+	return 0;
 }
