@@ -31,10 +31,7 @@ int solve(string& arr, int n, int x, bool tight){
 
 
 int main() {
-#ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-#endif
+
     memset(dp, -1, sizeof dp);
 
     string s = "1120343423443535";
