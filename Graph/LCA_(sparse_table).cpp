@@ -1,5 +1,4 @@
-/*
-Input:
+/*Input:
 19
 1 2
 2 4
@@ -21,38 +20,38 @@ Input:
 15 16
 
 Output:
-1
-3
+	1
+	3
 
-  
- */
-
+*/
 #include <bits/stdc++.h>
 using namespace std;
 
 const int N = 100000, M = 22;
 vector<int> l[N];
 
-int tin[N], tout[N], timer;
+int depth[N];
 int Par[N][M];
-
+	
 void addEdge(int u, int v){
 		l[u].push_back(v);
 		l[v].push_back(u);
 }
 	
 void dfs_helper(int src, int par){
-	tin[src] = ++timer;
 	for(int nbr: l[src]){
 		if(nbr != par){
+			depth[nbr] = depth[src] + 1;
 			dfs_helper(nbr, src);
 		}
 	}
-	tout[src] = timer;
 	return;
 }
 
-	
+void dfs(int src, int par){
+	dfs_helper(src, par);
+}
+
 void calc_sparse_table(int src, int par){
 	Par[src][0] = par;
 	for(int j=1; j<M; j++){
@@ -66,30 +65,36 @@ void calc_sparse_table(int src, int par){
 	}
 }
 
-void dfs(int src, int par){
-	tin[0] = 0; 
-	tout[0] = N+1;		//universal parent
-	dfs_helper(src, par);
-}
-	
-bool isAncestor(int u, int v){
-	return tin[u] <= tin[v] && tout[u] >= tout[v];
-}
+int lca_depth(int u, int v){
+	if(u == v)	return u;
 
-int lca_euler_tree(int u, int v){
-	// us is ancestor of v
-	if(isAncestor(u, v))	return u;
-	if(isAncestor(v, u))	return v;
+	//assume u is at grater depth
+	if(depth[u] < depth[v]) swap(u, v);
 
-	for(int i=M-1; i>=0; i--){
-		//Parent[u][i] is not ancestor of v then move to it
-		if(!isAncestor(Par[u][i], v)){
+	int diff = depth[u] - depth[v];
+
+	for(int i = M-1; i>=0 ; i--){
+		if((diff >> i) & 1){
+			u = Par[u][i];
+		}
+	}
+
+	//after this u  and v are on same level
+	//v was ancestor of u
+	if(u == v){
+		return u;
+	}
+
+	for(int i = M-1; i>=0 ; i--){
+		if(Par[u][i] != Par[v][i]){
 			u = Par[u][i];
 			v = Par[v][i];
 		}
-	}		
+	}
 
-	return Par[u][0];
+	//I am standing on different nodes
+	return Par[u][0]; 	//or return Par[v][0] same thing
+
 }
 	
 
@@ -105,11 +110,10 @@ int main() {
 		l[x].push_back(y);
 		l[y].push_back(x);
 	}
-	timer=0;
 	dfs(1, 0);
 	calc_sparse_table(1,0);
-	cout<<lca_euler_tree(9, 15)<<endl;
-	cout<<lca_euler_tree(18, 15)<<endl;
+	cout<<lca_depth(9, 15)<<endl;
+	cout<<lca_depth(18, 15)<<endl;
 	
 	
 	return 0;
