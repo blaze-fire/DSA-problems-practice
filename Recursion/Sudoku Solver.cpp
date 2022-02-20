@@ -10,8 +10,8 @@ bool canSolve(int mat[][9], int i, int j, int n, int number){
         }
     }
 
-
-    int rn = sqrt(n);
+    //iterate in subgrid
+    int rn = sqrt(n);   //(rn x rn) subgrid
     int sx = (i/rn)*rn;
     int sy = (j/rn)*rn;
 
@@ -23,9 +23,7 @@ bool canSolve(int mat[][9], int i, int j, int n, int number){
         }
     }
 
-
     return true;
-
 }
 
 
@@ -40,7 +38,6 @@ bool SudokuSolver(int mat[][9], int i, int j, int n){
             cout<<endl;
         }
 
-
         return true;
     }
 
@@ -49,15 +46,12 @@ bool SudokuSolver(int mat[][9], int i, int j, int n){
         return SudokuSolver(mat, i+1, 0, n);
     }
 
-
     //if a value already present
     if(mat[i][j] != 0){
         return SudokuSolver(mat, i, j+1, n);
     }
 
-
     //Recursive case
-
     for(int number = 1; number <= n; number++){
         
         if(canSolve(mat, i, j, n, number)){
@@ -80,10 +74,6 @@ bool SudokuSolver(int mat[][9], int i, int j, int n){
 
 
 int main() {
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
-    #endif
 
     int mat[9][9] = 
         {

@@ -11,6 +11,7 @@ void permutaions(char *in, int i){
     for(int j=i; in[j] != '\0'; j++){
         swap(in[i], in[j]);
         permutaions(in, i+1);
+        //Backtracting to restore the orignal array
         swap(in[i], in[j]);
     }
 
