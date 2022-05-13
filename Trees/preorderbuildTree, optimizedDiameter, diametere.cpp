@@ -1,3 +1,4 @@
+// Input : 1 2 3 4 5 -1 6 -1 -1 -1 7 -1 -1 -1 -1
 #include <iostream>
 #include <queue>
 
