@@ -1,72 +1,76 @@
 #include<bits/stdc++.h>
+
 using namespace std;
 
-class BFS{
-    int V;
-    vector<int> *adj;
+class graph{
+    int v;
+    list <int> *l;
 
 public:
-
-    BFS(int v){
-        V = v+1;
-        adj = new vector<int> [V];
+    graph(int data){
+        v = data;
+        l = new list<int> [v];
     }
 
-    void addEdge(int x, int y){
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
-    
-    void sol(int src){
 
-        bool visited[V] = {false};
-    
-        queue<int> Q;
-    
-        Q.push(src);
-    
+    void addEdge(int u, int v, bool undir=true){
+        l[u].push_back(v);
+
+        if(undir){
+            l[v].push_back(u);
+        }
+    }
+
+    void print(){
+        for(int i=0; i<v; i++){
+            cout<<i<<" : ";
+            for(auto elm = l[i].begin(); elm != l[i].end(); elm++){
+                cout<<*elm<<" ";
+            }
+            cout<<endl;
+        }
+    }
+
+
+    void bfs(int src){
+        queue<int> q;
+        q.push(src);
+        bool visited[v] = {false};
         visited[src] = true;
-    
-            
-        while(!Q.empty()){
-            int top = Q.front();
-            Q.pop();
-            
-            visited[top] = true;
-            cout<<top<<"    ";
 
-            for(auto nbr: adj[top]){
-                if(!visited[nbr]){
-                    Q.push(nbr);
-                    visited[nbr] = true;
+        while(!q.empty()){
+            int top = q.front();
+            q.pop();
+            cout<<top<<" ";
+
+            for(auto elm : l[top]){
+                if(!visited[elm]){
+                    q.push(elm);
+                    visited[elm] = true;
                 }
             }
         }
-    
-        
     }
 };
 
+
+
+
+
 int main(){
-    
-    int v, e;
+    graph g(6);
 
-    cin>>v>>e;
+    g.addEdge(0, 1);
+    g.addEdge(1, 2);
+    g.addEdge(0, 4);
+    g.addEdge(2, 3);
+    g.addEdge(3, 4);
+    g.addEdge(3, 5);
+    g.addEdge(5, 4);
 
-    BFS g(v);
+    g.bfs(1);               //Expected output: 1 0 2 4 3 5
 
-    for(int i=0; i<e; i++){
-        int u, v;
-        cin>>u>>v;
-        g.addEdge(u, v);
-    }    
-
-    g.sol(0);
-
-
+//     g.print();
     cout<<endl;
-
     return 0;
-    
 }
-
