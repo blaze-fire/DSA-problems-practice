@@ -37,7 +37,7 @@ class Graph{
 		
 		int dist[V] = {0};
 		int shortestCycle = INT_MAX; 
-		for(int i=0; i<V; i++){
+		for(int i=1; i<V; i++){
 			if(dist[i] == 0){
 				int temp = INT_MAX;
 				dist[i] = 1;
