@@ -93,7 +93,7 @@ class Graph{
 		}
 		
 	
-		cout<<ans;
+		cout<<"Answer : "<<ans<<endl;
 	}
 	
 };
