@@ -6,30 +6,27 @@ using namespace std;
 bool isvalid(int books[], int n, int m, int max_lim){
 	
 	int count = 1;
-	int temp_lim = max_lim;
+	int temp_sum = 0;
 	
 	for(int i=0; i<n; i++){
-		if(temp_lim - books[i] >= 0){
-			temp_lim -= books[i];
+		if(books[i] > max_lim){
+			return false;
+		}
+
+		if(temp_sum + books[i] > max_lim){
+			temp_sum = books[i];
+			count++;
 		}	
 		else{
-			count++;
-			temp_lim = max_lim;
-			if(count >= m && i != n-1){
-				return false;
-			}
+			temp_sum += books[i];
 		}
 	}
 	
-	if(count <= m){
-		return true;
-	}
-	
-	return false;
+	return (count <= m);
 }
 
 int main(){
-	int books[] = {10, 20, 30, 40};
+	int books[] = {12,34,67,90};
 	int n = 4, m = 2;
 	int pages = 0;
 	
